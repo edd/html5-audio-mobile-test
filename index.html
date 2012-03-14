@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>title</title>
+  </head>
+  <body>
+		<p><audio id="audioPlayer" controls></audio></p>
+
+		<p><button id="go">Click here to start the playlist.</button></p>
+
+		<p><textarea id="activityLog" style="width: 330px; height: 100px;"></textarea></p>
+		
+		<script>
+					// Gather required elements
+			var go = document.getElementById('go'),
+					audioPlayer = document.getElementById('audioPlayer'),
+					activityLog = document.getElementById('activityLog'),
+					
+					// Start at track 1, go to track 3
+					currentTrackNumber = 1,
+					trackLimit = 3;
+
+			audioPlayer.addEventListener("canplaythrough", playTrack);
+			audioPlayer.addEventListener("ended", advanceTrack);
+			go.addEventListener("click", startPlayback);
+			
+			// Plays track 1 whenever its hit
+			function startPlayback(){
+				currentTrackNumber = 1;
+				setTrack(currentTrackNumber);
+			};
+			
+			// Play the next track, looping forever
+			function advanceTrack(){
+				log('Played');
+				currentTrackNumber++;
+				
+				if (currentTrackNumber > trackLimit){
+					currentTrackNumber = 1;
+				}
+				
+				setTrack(currentTrackNumber);
+			}
+
+			// Recycle the existing HTML5 audio element by setting the src to our new track
+			function setTrack(id){
+				audioPlayer.src = 'assets/audio/track'+id+'.mp3';
+				log('Setting: '+id);
+			}
+			
+			function playTrack(){
+				log('Playing');
+
+				audioPlayer.currentTime = 0.1;
+				audioPlayer.play();
+			}
+			
+			// Simple screen output logging
+			function log(text){
+				console.log(text);
+				activityLog.value = text+ "\r\n"+activityLog.value;
+			}
+		</script>
+  </body>
+</html>
