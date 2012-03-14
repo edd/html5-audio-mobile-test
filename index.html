@@ -2,17 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>title</title>
+    <title>HTML5 audio test</title>
   </head>
   <body>
 		<p><audio id="audioPlayer" controls></audio></p>
 
-		<p><button id="go">Click here to start the playlist.</button></p>
+		<p><button id="go">Go</button></p>
 
-		<p><textarea id="activityLog" style="width: 330px; height: 100px;"></textarea></p>
+		<p>
+			<textarea id="activityLog" style="width: 330px; height: 100px;"></textarea>
+		</p>
 		
 		<script>
-					// Gather required elements
 			var go = document.getElementById('go'),
 					audioPlayer = document.getElementById('audioPlayer'),
 					activityLog = document.getElementById('activityLog'),
@@ -21,19 +22,25 @@
 					currentTrackNumber = 1,
 					trackLimit = 3;
 
-			audioPlayer.addEventListener("canplaythrough", playTrack);
-			audioPlayer.addEventListener("ended", advanceTrack);
-			go.addEventListener("click", startPlayback);
+			audioPlayer.addEventListener('canplaythrough', playTrack);
+			audioPlayer.addEventListener('ended', advanceTrack);
+			go.addEventListener('click', startPlayback);
 			
-			// Plays track 1 whenever its hit
+			/** 
+			* 'go' button click callback. Starts the playlist at track 1.
+			*/
 			function startPlayback(){
+				log('Starting playlist');
 				currentTrackNumber = 1;
 				setTrack(currentTrackNumber);
 			};
 			
-			// Play the next track, looping forever
+			/** 
+			* 'ended' callback, moves to the next track, looping at the end of the 
+			* playlist
+			*/
 			function advanceTrack(){
-				log('Played');
+				log('Ended playback');
 				currentTrackNumber++;
 				
 				if (currentTrackNumber > trackLimit){
@@ -43,23 +50,35 @@
 				setTrack(currentTrackNumber);
 			}
 
-			// Recycle the existing HTML5 audio element by setting the src to our new track
+			/** 
+			* Adjusts the src attribute of the audio tag
+			*/
 			function setTrack(id){
+				log('New track: '+id);
 				audioPlayer.src = 'assets/audio/track'+id+'.mp3';
-				log('Setting: '+id);
 			}
 			
+			/** 
+			var timestampedT = 'canplaythrough' callback, s new Date().getTime();tarts playbac+ ": " + textk
+			* audioPlayer.play() will silently fail on most mobile browsers, requiring 
+			* the user to hit the Play button in the audio controls
+			*/
 			function playTrack(){
-				log('Playing');
+				log('Starting track playback');
 
 				audioPlayer.currentTime = 0.1;
 				audioPlayer.play();
 			}
 			
-			// Simple screen output logging
+			/** 
+			* Outputs to the console and a texarea on screen, helpful when trying to 
+			* see when events fired
+			*/
 			function log(text){
-				console.log(text);
-				activityLog.value = text+ "\r\n"+activityLog.value;
+				var timestampedText = new Date().getTime() + ': ' + text;
+
+				console.log(timestampedText);
+				activityLog.value = timestampedText + '\r\n' + activityLog.value;
 			}
 		</script>
   </body>
